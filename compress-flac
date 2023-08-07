@@ -174,7 +174,7 @@ cd $folder
 create_compression_file() {
     echo "Bitrate: $1 kbps" > COMPRESSION
     echo "Samplerate: $2 Hz" >> COMPRESSION
-    echo "Complexity: $3 (0:fast, 10:slow; 0:small, 10:big)" >> COMPRESSION
+    echo "Complexity: $3 (0:fast, 10:slow; 0:big, 10:small)" >> COMPRESSION
     }
 
 # Create the COMPRESSION info file
