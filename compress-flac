@@ -163,7 +163,7 @@ for file in *.flac; do
         # Convert FLAC to Ogg Vorbis with medium compression
         echo
         echo "Converting $file..."
-        ffmpeg -y -c:a libvorbis -loglevel error -stats $threads_option $hwaccel_option -i "$file" -i $cover_image -b:a $bitrate -ar $samplerate -compression_level $complexity "$folder/$file_name.ogg" &&\
+        ffmpeg -y -i "$file" -i $cover_image -c:a libvorbis -loglevel error -stats $threads_option $hwaccel_option -b:a $bitrate -ar $samplerate -compression_level $complexity -map_metadata -1 "$folder/$file_name.ogg" &&\
         echo "done."
     fi
 done
