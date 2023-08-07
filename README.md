@@ -18,5 +18,5 @@ have fun!
 
 ```
 wget https://github.com/trytomakeyouprivate/Audio-Stuff/raw/main/compress-flac -P ~/.local/bin
-chmod +x ~/.local/bin
+chmod +x ~/.local/bin/compress-flac
 ```
