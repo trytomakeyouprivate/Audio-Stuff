@@ -1,1 +1,181 @@
+#!/bin/bash
+
+help_text="
+
+   ------ Compress Flac to Ogg Vorbis ------
+
+
+Usage: compress-flac [size] [speed]
+
+Arguments:
+    size:        Specify the output size. Options: big, medium, small, tiny
+    speed:       Specify the encoding speed. Options: fast, medium, slow, superslow
+    -m BITRATE SAMPLERATE SPEED
+                 Manually enter the bitrate (kbps), samplerate (Hz), and speed (complexity)
+
+
+              --- EXPLANATIONS: ---
+Sample Rates:
+
+    44100 Hz
+        This is the standard sample rate used for CD-quality audio. It provides a good balance between audio quality and file size.
+    48000 Hz
+        Commonly used for high-quality audio, especially in professional audio production or broadcasting.
+    22050 Hz
+        Suitable for speech or low-quality audio recordings where file size is a concern.
+
+Bitrates:
+
+    64-96 kbps
+        This range is suitable for low-quality audio, such as audiobooks, speech recordings, or voice-only content. It provides small file sizes but sacrifices some audio fidelity.
+    128-192 kbps
+        A commonly used range for general music recordings. It provides a good balance between audio quality and file size.
+    192-256 kbps
+        Suitable for higher-quality audio recordings, especially for music genres where audio details are important, such as classical or jazz.
+    320 kbps
+        This represents the highest quality available in Ogg Vorbis format. It provides excellent audio fidelity but results in larger file sizes.
+"
+
+# Function to create the COMPRESSION file
+create_compression_file() {
+    echo "Bitrate: $1 kbps" > COMPRESSION
+    echo "Samplerate: $2 Hz" >> COMPRESSION
+    echo "Complexity: $3" >> COMPRESSION
+}
+
+
+
+########### ARGUMENTS ##################
+
+# Check if help argument is provided
+if [[ $1 == "help" || $1 == "-h" || $1 == "--help" || $1 == "-help" ]]; then
+    echo "$help_text"
+    exit
+fi
+
+# Check if manual argument is provided
+if [[ $1 == "-m" ]]; then
+    # Check if all manual arguments are provided
+    if [[ $# -lt 5 ]]; then
+        echo "Please provide all the manual argument values."
+        echo "$help_text"
+        exit
+    fi
+
+    # Extract manual argument values
+    bitrate=$2
+    samplerate=$3
+    complexity=$4
+
+    # Create the folder with size appended
+    folder="Compressed_${bitrate}_${samplerate}_${complexity}"
+    mkdir "$folder"
+
+    # Encode the FLAC files with manual arguments
+    echo "Compressing files with manual arguments..."
+    # Your FFmpeg command using the manual arguments here
+
+    # Create the COMPRESSION file
+    create_compression_file $bitrate $samplerate $complexity
+
+    echo "All files compressed. Output folder: $folder"
+    exit
+fi
+
+# Set bitrate and samplerate based on size argument
+case $1 in
+    "big")
+        bitrate=256
+        samplerate=48000
+        ;;
+    "medium")
+        bitrate=192
+        samplerate=44100
+        ;;
+    "small")
+        bitrate=128
+        samplerate=40000
+        ;;
+    "tiny")
+        bitrate=96
+        samplerate=22050
+        ;;
+    *)
+        echo "Invalid size argument. Use -h for help."
+        exit
+        ;;
+esac
+
+# Set complexity based on speed argument
+case $2 in
+    "fast")
+        complexity=2
+        ;;
+    "medium")
+        complexity=6
+        ;;
+    "slow")
+        complexity=8
+        ;;
+    "superslow")
+        complexity=10
+        ;;
+    *)
+        echo "Invalid speed argument. Use -h for help."
+        exit
+        ;;
+esac
+
+# Create the folder with size appended
+folder="Compressed_${bitrate}_${samplerate}_${complexity}"
+mkdir "$folder"
+
+# Encode the FLAC files with preset arguments
+echo
+echo "Compressing files with preset arguments..."
+echo
+
+
+############## HARDWARE ACCELERATION ############
+
+# Detect the number of CPU threads
+cpu_threads=$(nproc)
+
+# Detect the number of GPU devices (assuming Nvidia GPUs with CUDA support)
+nvidia_devices=$(nvidia-smi -L | wc -l)
+
+# Detect the number of AMD GPUs
+amd_devices=$(rocm-smi -L | wc -l)
+
+# Set the threads and hardware acceleration options for FFmpeg
+threads_option="-threads $cpu_threads"
+hwaccel_option=""
+
+if [[ $nvidia_devices -gt 0 ]]; then
+    hwaccel_option="-hwaccel cuvid"
+elif [[ $amd_devices -gt 0 ]]; then
+    hwaccel_option="-c:v h264_amf"
+fi
+
+
+############# MAIN FUNCTION ##################
+
+
+# Loop through all .flac files in the current directory
+for file in *.flac; do
+    if [[ -f "$file" ]]; then
+        # Extract file name without extension
+        file_name=$(basename "$file" .flac)
+
+        # Convert FLAC to Ogg Vorbis with medium compression
+        ffmpeg $threads_option $hwaccel_option -i "$file" -b:a $bitrate -ar $samplerate -compression_level $complexity "$folder/$file_name.ogg"
+    fi
+done
+
+
+# Create the COMPRESSION info file
+create_compression_file $bitrate $samplerate $complexity
+
+echo "All files compressed. Output folder: $folder"
+exit
 
