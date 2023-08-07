@@ -176,6 +176,7 @@ done
 # Create the COMPRESSION info file
 create_compression_file $bitrate $samplerate $complexity
 
+echo
 echo "All files compressed. Output folder: $folder"
+echo
 exit
-
