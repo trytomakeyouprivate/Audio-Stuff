@@ -36,15 +36,6 @@ Bitrates:
         This represents the highest quality available in Ogg Vorbis format. It provides excellent audio fidelity but results in larger file sizes.
 "
 
-# Function to create the COMPRESSION file
-create_compression_file() {
-    echo "Bitrate: $1 kbps" > COMPRESSION
-    echo "Samplerate: $2 Hz" >> COMPRESSION
-    echo "Complexity: $3" >> COMPRESSION
-}
-
-
-
 ########### ARGUMENTS ##################
 
 # Check if help argument is provided
@@ -172,6 +163,14 @@ for file in *.flac; do
     fi
 done
 
+
+
+# Function to create the COMPRESSION file
+create_compression_file() {
+    echo "Bitrate: $1 kbps" > $folder/COMPRESSION
+    echo "Samplerate: $2 Hz" >> $folder/COMPRESSION
+    echo "Complexity: $3 (0:fast, 10:slow; 0:small, 10:big)" >> $folder/COMPRESSION
+}
 
 # Create the COMPRESSION info file
 create_compression_file $bitrate $samplerate $complexity
