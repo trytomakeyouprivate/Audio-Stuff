@@ -4,7 +4,7 @@ Some scripts, tools and tricks for Audio on Linux, maybe Android
 ### compress-flac
 
 Flac files are nice, but way too big. ffmpeg is nice, but a bit complicated. This is a helper script for ffmpeg to convert flacs to ogg vorbis
-- help page explains everything (and you can use `help`, `-h`, `--help` or `-help` how you like!
+- help page explains everything (and you can use `help`, `-h`, `--help` or `-help` how you like!)
 - Predefined compression levels or manual mode for experts
 - automatically finds and compresses all flac files in the current directory
 - detects Hardware and uses all cores and GPU when possible
