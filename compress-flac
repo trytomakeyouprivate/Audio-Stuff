@@ -163,10 +163,21 @@ for file in *.flac; do
         # Convert FLAC to Ogg Vorbis with medium compression
         echo
         echo "Converting $file..."
-        ffmpeg -y -i "$file" -i $cover_image -c:a libvorbis -loglevel error -stats $threads_option $hwaccel_option -b:a $bitrate -ar $samplerate -compression_level $complexity -map_metadata -1 "$folder/$file_name.ogg" &&\
+        ffmpeg -y -i "$file" -i $cover_image -c:a libvorbis -loglevel error -stats $threads_option $hwaccel_option -b:a $bitrate -ar $samplerate -compression_level $complexity -vn "$folder/$file_name.ogg" &&\
         echo "done."
     fi
 done
+
+# Explanation of parameters
+# -y: avoid overwrite of Cover image issues
+# -i input for file and cover image, as FLAC doesnt contain cover images
+# -c:a codec for audio
+# -loglevel error: should only output errors and not all metadata
+# -stats: outputs base statistics
+# -b:a bitrate of audio
+# -ar samplerate ?
+# -compression_level: Amount of CPU used to decode, smaller but heavier
+# -vn: remove any video from output (random bug?)
 
 cd $folder
 
