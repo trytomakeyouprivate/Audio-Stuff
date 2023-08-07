@@ -133,10 +133,10 @@ echo
 cpu_threads=$(nproc)
 
 # Detect the number of GPU devices (assuming Nvidia GPUs with CUDA support)
-nvidia_devices=$(nvidia-smi -L | wc -l)
+nvidia_devices=$(nvidia-smi -L | wc -l) 2> /dev/null
 
 # Detect the number of AMD GPUs
-amd_devices=$(rocm-smi -L | wc -l)
+amd_devices=$(rocm-smi -L | wc -l) 2> /dev/null
 
 # Set the threads and hardware acceleration options for FFmpeg
 threads_option="-threads $cpu_threads"
