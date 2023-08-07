@@ -165,17 +165,17 @@ for file in *.flac; do
     fi
 done
 
-
+cd $folder
 
 # Function to create the COMPRESSION file
 create_compression_file() {
-    echo "Bitrate: $1 kbps" > $folder/COMPRESSION
-    echo "Samplerate: $2 Hz" >> $folder/COMPRESSION
-    echo "Complexity: $3 (0:fast, 10:slow; 0:small, 10:big)" >> $folder/COMPRESSION
-}
+    echo "Bitrate: $1 kbps" > COMPRESSION
+    echo "Samplerate: $2 Hz" >> COMPRESSION
+    echo "Complexity: $3 (0:fast, 10:slow; 0:small, 10:big)" >> COMPRESSION
+    }
 
 # Create the COMPRESSION info file
-create_compression_file $bitrate $samplerate $complexity
+create_compression_file $bitrate $samplerate $complexity && cd ..
 
 echo
 echo "All files compressed. Output folder: $folder"
