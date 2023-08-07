@@ -59,7 +59,7 @@ if [[ $1 == "-m" ]]; then
     complexity=$4
 
     # Create the folder with size appended
-    folder="Compressed_${bitrate}_${samplerate}_${complexity}"
+    folder="Compressed_${bitrate}bps_${samplerate}Hz_${complexity}"
     mkdir "$folder"
 
     # Encode the FLAC files with manual arguments
@@ -133,10 +133,10 @@ echo
 cpu_threads=$(nproc)
 
 # Detect the number of GPU devices (assuming Nvidia GPUs with CUDA support)
-nvidia_devices=$(nvidia-smi -L | wc -l) 2> /dev/null
+nvidia_devices=$(nvidia-smi -L | wc -l) &>/dev/null
 
 # Detect the number of AMD GPUs
-amd_devices=$(rocm-smi -L | wc -l) 2> /dev/null
+amd_devices=$(rocm-smi -L | wc -l) &>/dev/null
 
 # Set the threads and hardware acceleration options for FFmpeg
 threads_option="-threads $cpu_threads"
@@ -152,6 +152,8 @@ fi
 ############# MAIN FUNCTION ##################
 
 
+cover_image=$(find . -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) -iname "*cover*")
+
 # Loop through all .flac files in the current directory
 for file in *.flac; do
     if [[ -f "$file" ]]; then
@@ -159,8 +161,9 @@ for file in *.flac; do
         file_name=$(basename "$file" .flac)
 
         # Convert FLAC to Ogg Vorbis with medium compression
+        echo
         echo "Converting $file..."
-        ffmpeg -loglevel error -stats $threads_option $hwaccel_option -i "$file" -b:a $bitrate -ar $samplerate -compression_level $complexity "$folder/$file_name.ogg" &&\
+        ffmpeg -loglevel error -stats $threads_option $hwaccel_option -i "$file" -i $cover_image -b:a $bitrate -ar $samplerate -compression_level $complexity "$folder/$file_name.ogg" &&\
         echo "done."
     fi
 done
