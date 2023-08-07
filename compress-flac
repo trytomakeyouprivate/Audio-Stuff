@@ -178,4 +178,5 @@ create_compression_file $bitrate $samplerate $complexity
 echo
 echo "All files compressed. Output folder: $folder"
 echo
+notify-send -a "ffmpeg" "FLAC Compression" "All flac files are compressed! You find them in folder $folder."
 exit
