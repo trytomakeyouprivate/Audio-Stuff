@@ -88,7 +88,7 @@ case $1 in
         samplerate=40000
         ;;
     "tiny")
-        bitrate=96
+        bitrate=96k
         samplerate=22050
         ;;
     *)
