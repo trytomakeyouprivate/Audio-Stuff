@@ -85,15 +85,15 @@ fi
 # Set bitrate and samplerate based on size argument
 case $1 in
     "big")
-        bitrate=256
+        bitrate=256k
         samplerate=48000
         ;;
     "medium")
-        bitrate=192
+        bitrate=192k
         samplerate=44100
         ;;
     "small")
-        bitrate=128
+        bitrate=128k
         samplerate=40000
         ;;
     "tiny")
