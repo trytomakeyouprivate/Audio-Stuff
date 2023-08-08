@@ -37,3 +37,12 @@ Interesting: [View lost sound data with audacity](https://youtu.be/MmecPiKClHk),
 - [JamesDSP Library](https://github.com/james34602/JamesDSPManager)
 
 
+## [Ardour](https://flathub.org/apps/org.ardour.Ardour)
+
+You find Flatpak sound plugins as "runtimes", so not in GUI appstores:
+
+```
+flatpak search "LinuxAudio.Plugins"
+flatpak install flathub -y A B C
+```
+There are multiple versions, use the latest if there are no compatibility issues. They are kept seperate because of that I guess.
